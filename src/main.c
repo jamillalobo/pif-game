@@ -1,57 +1,147 @@
-#include <SDL2/SDL.h>
-#include <stdio.h>
+/**
+ * main.h
+ * Created on Aug, 23th 2023
+ * Author: Tiago Barros
+ * Based on "From C to C++ course - 2002"
+*/
 
-int main(int argc, char *argv[]) {
-    // Initialize SDL
-    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-        printf("Error initializing SDL: %s\n", SDL_GetError());
-        return -1;
+#include <string.h>
+
+#include "screen.h"
+#include "keyboard.h"
+#include "timer.h"
+
+int x = 34, y = 12;
+int incX = 1, incY = 1;
+
+void printHello(int nextX, int nextY)
+{
+    screenSetColor(CYAN, DARKGRAY);
+    screenGotoxy(x, y);
+    printf("           ");
+    x = nextX;
+    y = nextY;
+    screenGotoxy(x, y);
+    printf("Hello World");
+}
+
+void printKey(int ch)
+{
+    screenSetColor(YELLOW, DARKGRAY);
+    screenGotoxy(35, 22);
+    printf("Key code :");
+
+    screenGotoxy(34, 23);
+    printf("            ");
+    
+    if (ch == 27) screenGotoxy(36, 23);
+    else screenGotoxy(39, 23);
+
+    printf("%d ", ch);
+    while (keyhit())
+    {
+        printf("%d ", readch());
     }
+}
 
-    // Create a window
-    SDL_Window *window = SDL_CreateWindow(
-        "Simple Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_SHOWN
-    );
-    if (!window) {
-        printf("Error creating window: %s\n", SDL_GetError());
-        return -1;
-    }
+int main() 
+{
+    static int ch = 0;
 
-    // Create a renderer
-    SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-    if (!renderer) {
-        printf("Error creating renderer: %s\n", SDL_GetError());
-        SDL_DestroyWindow(window);
-        return -1;
-    }
+    screenInit(1);
+    keyboardInit();
+    timerInit(50);
 
-    // Game loop
-    int running = 1;
-    SDL_Event event;
+    printHello(x, y);
+    screenUpdate();
 
-    while (running) {
-        // Handle events
-        while (SDL_PollEvent(&event)) {
-            if (event.type == SDL_QUIT) {
-                running = 0;
-            }
+    while (ch != 10) //enter
+    {
+        // Handle user input
+        if (keyhit()) 
+        {
+            ch = readch();
+            printKey(ch);
+            screenUpdate();
         }
 
-        // Clear the screen with a color
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-        SDL_RenderClear(renderer);
+        // Update game state (move elements, verify collision, etc)
+        if (timerTimeOver() == 1)
+        {
+            int newX = x + incX;
+            if (newX >= (MAXX -strlen("Hello World") -1) || newX <= MINX+1) incX = -incX;
+            int newY = y + incY;
+            if (newY >= MAXY-1 || newY <= MINY+1) incY = -incY;
 
-        // Present the screen
-        SDL_RenderPresent(renderer);
+            printKey(ch);
+            printHello(newX, newY);
 
-        // Delay to control frame rate
-        SDL_Delay(16); // Roughly 60 FPS
+            screenUpdate();
+        }
     }
 
-    // Cleanup
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(window);
-    SDL_Quit();
+    keyboardDestroy();
+    screenDestroy();
+    timerDestroy();
 
     return 0;
 }
+
+
+// #include <SDL2/SDL.h>
+// #include <stdio.h>
+
+// int main(int argc, char *argv[]) {
+//     // Initialize SDL
+//     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+//         printf("Error initializing SDL: %s\n", SDL_GetError());
+//         return -1;
+//     }
+
+//     // Create a window
+//     SDL_Window *window = SDL_CreateWindow(
+//         "Simple Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_SHOWN
+//     );
+//     if (!window) {
+//         printf("Error creating window: %s\n", SDL_GetError());
+//         return -1;
+//     }
+
+//     // Create a renderer
+//     SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+//     if (!renderer) {
+//         printf("Error creating renderer: %s\n", SDL_GetError());
+//         SDL_DestroyWindow(window);
+//         return -1;
+//     }
+
+//     // Game loop
+//     int running = 1;
+//     SDL_Event event;
+
+//     while (running) {
+//         // Handle events
+//         while (SDL_PollEvent(&event)) {
+//             if (event.type == SDL_QUIT) {
+//                 running = 0;
+//             }
+//         }
+
+//         // Clear the screen with a color
+//         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+//         SDL_RenderClear(renderer);
+
+//         // Present the screen
+//         SDL_RenderPresent(renderer);
+
+//         // Delay to control frame rate
+//         SDL_Delay(16); // Roughly 60 FPS
+//     }
+
+//     // Cleanup
+//     SDL_DestroyRenderer(renderer);
+//     SDL_DestroyWindow(window);
+//     SDL_Quit();
+
+//     return 0;
+// }
