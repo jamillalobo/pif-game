@@ -1,26 +1,24 @@
 # Pif Game
 
-## cli-lib
-Command Line Interface library, for developing CLI applications and games in C. It has functions to access keyboard, screen and manage timing tasks.
+#Nome do jogo: MeteoriC
 
-## Requirements
-- This library works with the follwing OS:
-   - Linux based (Ubuntu, etc)
-   - MacOS
-- It is necessary to have GCC installed.
+MeteoriC remete aos clássico Asteroids de fliperama. 
+Em Meteoric você será lançado ao espaço em meio a cinturão de meteoritos e evitar ser destruído marcando a maior quantidade de pontos possível!
 
-## Usage 
-The file `main.c` has an example of how to use the Keyboard, Screen nd Timer functions. 
+#Integrantes
+- Jamilla Lobo (@jamillalobo)
+- Luis Facunde (@LuisFacunde)
+- Lucas Deodato (@Lucas-deodato)
 
-To build this example via command line, just switch to library root directory and type the following command:
-```
-$ gcc ./src/*.c -I./include -o cli-lib-example
-```
+#Instituição
+- CESAR School
 
-To use this library to create your own apps, simply add source and header files to your project and compile it together with your own code, 
-replacing the main.c file to your own.
+#Disciplina
+- Programação Imperativa e Funcional - 2024.2
 
-##Integrantes
-- Jamilla Lobo
-- Luis Facunde
-- Lucas Deodato
+#Como jogar: 
+   1. Utilizar sistema basedo em Linux ou MacOS e 
+   2. ter o GCC instalado (para que o jogo seja compilado)
+   3. Mude o diretório raiz da biblioteca e digite o seguinto comando -> gcc ./src/*.c -I./include -o cli-lib-example
+      - Esse comando irá compilar os arquivos e gerar um arquivo executável
+   4. Após gerar o executável digite no terminal: ./cli-lib-exemple -> para executar o jogo
