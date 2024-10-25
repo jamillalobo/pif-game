@@ -6,9 +6,9 @@ MeteoriC remete aos clássico Asteroids de fliperama.
 Em Meteoric você será lançado ao espaço em meio a cinturão de meteoritos e evitar ser destruído marcando a maior quantidade de pontos possível!
 
 #Integrantes
-- Jamilla Lobo (@jamillalobo)
-- Luis Facunde (@LuisFacunde)
-- Lucas Deodato (@Lucas-deodato)
+- Jamilla Lobo ([@jamillalobo](https://github.com/jamillalobo))
+- Lucas Deodato ([@Lucas-deodato](https://github.com/Lucas-deodato))
+- Luis Facunde ([@LuisFacunde](https://github.com/LuisFacunde))
 
 #Instituição
 - CESAR School
