@@ -11,22 +11,28 @@
 #include "keyboard.h"
 #include "timer.h"
 
-int x = 34, y = 12;
-int incX = 1, incY = 1;
+int x = 34, y = 12; // Posição inicial da nave
+int incX = 1, incY = 1; // Incrementos para movimentação da nave
 
-void printHello(int nextX, int nextY)
-{
+void desenhaNave(int nextX, int nextY) {
     screenSetColor(CYAN, DARKGRAY);
-    screenGotoxy(x, y);
-    printf("           ");
+    
+    // Apaga a nave na posição antiga
+    screenGotoxy(x, y);         printf("     ");
+    screenGotoxy(x - 1, y + 1); printf("      ");
+    screenGotoxy(x - 2, y + 2); printf("      ");
+    
+    // Atualiza a posição da nave
     x = nextX;
     y = nextY;
-    screenGotoxy(x, y);
-    printf("Hello World");
+
+    // Desenha a nave na nova posição
+    screenGotoxy(x, y);         printf("  ^  ");  // Ponta da nave
+    screenGotoxy(x - 1, y + 1); printf(" / \\ "); // Asas da nave
+    screenGotoxy(x - 2, y + 2); printf("/   \\"); // Base da nave
 }
 
-void printKey(int ch)
-{
+void printKey(int ch) {
     screenSetColor(YELLOW, DARKGRAY);
     screenGotoxy(35, 22);
     printf("Key code :");
@@ -34,58 +40,57 @@ void printKey(int ch)
     screenGotoxy(34, 23);
     printf("            ");
     
-    if (ch == 27) screenGotoxy(36, 23);
-    else screenGotoxy(39, 23);
+    if (ch == 27) 
+        screenGotoxy(36, 23);
+    else 
+        screenGotoxy(39, 23);
 
     printf("%d ", ch);
-    while (keyhit())
-    {
+    while (keyhit()) {
         printf("%d ", readch());
     }
 }
 
-int main() 
-{
+int main() {
     static int ch = 0;
 
+    // Inicializa as bibliotecas
     screenInit(1);
     keyboardInit();
     timerInit(50);
 
-    printHello(x, y);
+    desenhaNave(x, y); // Desenha a nave na posição inicial
     screenUpdate();
 
-    while (ch != 10) //enter
-    {
-        // Handle user input
-        if (keyhit()) 
-        {
+    while (ch != 10) { // Sai do loop quando a tecla Enter (código 10) é pressionada
+        // Lida com a entrada do usuário
+        if (keyhit()) {
             ch = readch();
             printKey(ch);
             screenUpdate();
         }
 
-        // Update game state (move elements, verify collision, etc)
-        if (timerTimeOver() == 1)
-        {
+        if (timerTimeOver() == 1) {
             int newX = x + incX;
-            if (newX >= (MAXX -strlen("Hello World") -1) || newX <= MINX+1) incX = -incX;
             int newY = y + incY;
-            if (newY >= MAXY-1 || newY <= MINY+1) incY = -incY;
 
-            printKey(ch);
-            printHello(newX, newY);
+            // Inverte a direção caso atinja as bordas da tela
+            if (newX >= (MAXX - 5) || newX <= MINX + 1) incX = -incX;
+            if (newY >= MAXY - 3 || newY <= MINY + 1) incY = -incY;
 
+            desenhaNave(newX, newY);
             screenUpdate();
         }
     }
 
+    // Finaliza as bibliotecas
     keyboardDestroy();
     screenDestroy();
     timerDestroy();
 
     return 0;
 }
+
 
 
 // #include <SDL2/SDL.h>
