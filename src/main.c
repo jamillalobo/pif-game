@@ -17,19 +17,14 @@ int incX = 1, incY = 1; // Incrementos para movimentação da nave
 void desenhaNave(int nextX, int nextY) {
     screenSetColor(CYAN, DARKGRAY);
     
-    // Apaga a nave na posição antiga
-    screenGotoxy(x, y);         printf("     ");
-    screenGotoxy(x - 1, y + 1); printf("      ");
-    screenGotoxy(x - 2, y + 2); printf("      ");
-    
-    // Atualiza a posição da nave
+    screenGotoxy(x, y);         
+    printf(" ");
+
     x = nextX;
     y = nextY;
 
-    // Desenha a nave na nova posição
-    screenGotoxy(x, y);         printf("  ^  ");  // Ponta da nave
-    screenGotoxy(x - 1, y + 1); printf(" / \\ "); // Asas da nave
-    screenGotoxy(x - 2, y + 2); printf("/   \\"); // Base da nave
+    screenGotoxy(x, y);         
+    printf("O");
 }
 
 void printKey(int ch) {
@@ -54,18 +49,26 @@ void printKey(int ch) {
 int main() {
     static int ch = 0;
 
-    // Inicializa as bibliotecas
     screenInit(1);
     keyboardInit();
-    timerInit(50);
+    timerInit(1000);
 
-    desenhaNave(x, y); // Desenha a nave na posição inicial
+    desenhaNave(x, y);
     screenUpdate();
 
     while (ch != 10) { // Sai do loop quando a tecla Enter (código 10) é pressionada
         // Lida com a entrada do usuário
         if (keyhit()) {
             ch = readch();
+            if (ch == 'd'){
+                desenhaNave(x + 2, y);
+            } else if (ch == 'a'){
+                desenhaNave(x - 2, y);
+            } else if (ch == 's'){
+                desenhaNave(x, y + 2);
+            } else if (ch == 'w'){
+                desenhaNave(x, y - 2);
+            }
             printKey(ch);
             screenUpdate();
         }
@@ -74,9 +77,8 @@ int main() {
             int newX = x + incX;
             int newY = y + incY;
 
-            // Inverte a direção caso atinja as bordas da tela
-            if (newX >= (MAXX - 5) || newX <= MINX + 1) incX = -incX;
-            if (newY >= MAXY - 3 || newY <= MINY + 1) incY = -incY;
+            if (newX >= (MAXX - 1) || newX <= MINX + 1) incX = -incX;
+            if (newY >= MAXY - 1 || newY <= MINY + 1) incY = -incY;
 
             desenhaNave(newX, newY);
             screenUpdate();
