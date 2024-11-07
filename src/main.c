@@ -33,7 +33,6 @@ void spawn_object(Position *pos, int max_x, int max_y);
 void init_game(Position *fruit, Position *hole, int *lives) {
     screenInit(1);
     keyboardInit();
-    keypad(stdscr, TRUE);
     timerInit(100);
 
     *lives = 5;
@@ -124,21 +123,33 @@ int main() {
             desenhaCobra(newX, newY);
         }
 
-        // Leia diretamente a tecla pressionada
-        ch = getch();  
-        if (ch != ERR) {  // Verifique se uma tecla foi pressionada
-            if (ch == KEY_RIGHT) {
-                incX = 1;
-                incY = 0;
-            } else if (ch == KEY_LEFT) {
-                incX = -1;
-                incY = 0;
-            } else if (ch == KEY_DOWN) {
-                incX = 0;
-                incY = 1;
-            } else if (ch == KEY_UP) {
-                incX = 0;
-                incY = -1;
+        // Verifique se há uma tecla pressionada
+        if (keyhit()) {
+            ch = readch();
+            
+            // Debug: Imprime o código da tecla pressionada
+            printf("Tecla pressionada: %d\n", ch);
+
+            switch (ch) {
+                case 'A':
+                    incX = 0;
+                    incY = -1;
+                    break;
+                case 'B':
+                    incX = 0;
+                    incY = 1;
+                    break;
+                case 'D':
+                    incX = -1;
+                    incY = 0;
+                    break;
+                case 'C':
+                    incX = 1;
+                    incY = 0;
+                    break;
+                case 'q':
+                    lives = 0;
+                    break;
             }
         }
 
