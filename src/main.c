@@ -13,7 +13,6 @@
 #include "timer.h"
 #include <ncurses.h>
 
-// pontuação limite de vidas
 #define MAX_LIVES 10
 #define MIN_LIVES 0
 
@@ -22,12 +21,11 @@ struct {
 } typedef Position;
 
 int xSnake = MAXX/2, ySnake = MAXY/2; 
-int incX = 1, incY = 0; // Incrementos para movimentação da cobra
+int incX = 1, incY = 0;
 
-// Variável para armazenar a contagem de colisões
 int collision_count = 0;
 
-// Declaração antecipada da função spawn_object
+// Declaração antecipada da função spawn_object para evitar erro de implicit declaration
 void spawn_object(Position *pos, int max_x, int max_y);
 
 void init_game(Position *fruit, Position *hole, int *lives) {
@@ -54,7 +52,7 @@ void spawn_object(Position *pos, int max_x, int max_y) {
     printf("o");
 }
 
-void desenhaCobra(int nextX, int nextY) {
+void drawSnake(int nextX, int nextY) {
     screenSetColor(CYAN, DARKGRAY);
     
     screenGotoxy(xSnake, ySnake);         
@@ -101,7 +99,7 @@ int main() {
 
     Position fruit, hole;
     init_game(&fruit, &hole, &lives);
-    desenhaCobra(xSnake, ySnake);
+    drawSnake(xSnake, ySnake);
     screenUpdate();
 
     int spawn_counter = 0;
@@ -111,7 +109,7 @@ int main() {
             int newX = xSnake + incX;
             int newY = ySnake + incY;
 
-            // Verifique as bordas para a colisão e rebote
+            // Verifica as bordas para a colisão e rebote
             if (newX >= (MAXX - 2) || newX <= MINX + 1) {
                 incX = -incX;
             }
@@ -119,28 +117,27 @@ int main() {
                 incY = -incY;
             }
 
-            // Atualize a posição da cobra
-            desenhaCobra(newX, newY);
+            // Atualiza a posição da cobra
+            drawSnake(newX, newY);
         }
 
-        // Verifique se há uma tecla pressionada
         if (keyhit()) {
             ch = readch();
             
             switch (ch) {
-                case 'A':
+                case 'A': // seta pra cima
                     incX = 0;
                     incY = -1;
                     break;
-                case 'B':
+                case 'B': // seta pra baixo
                     incX = 0;
                     incY = 1;
                     break;
-                case 'D':
+                case 'D': // seta pra esquerda
                     incX = -1;
                     incY = 0;
                     break;
-                case 'C':
+                case 'C': // seta pra direita
                     incX = 1;
                     incY = 0;
                     break;
@@ -160,13 +157,11 @@ int main() {
     if (spawn_counter >= 35) {
         spawn_object(&hole, MAXX, MAXY);
         spawn_object(&fruit, MAXX, MAXY);
-        spawn_counter = 0; // Reseta o contador
+        spawn_counter = 0;
     }
     
 
     end_game();
-    
-    // Exibe o total de colisões ao final do jogo
     printf("Total de colisões: %d\n", collision_count);
 
     if (lives <= 0) printf("Game Over!\n");
