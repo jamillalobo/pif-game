@@ -8,10 +8,11 @@
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
+#include <ncurses.h>
+
 #include "screen.h"
 #include "keyboard.h"
 #include "timer.h"
-#include <ncurses.h>
 
 // pontuação limite de vidas
 #define MAX_LIVES 10
@@ -106,7 +107,7 @@ int main() {
 
     int spawn_counter = 0;
 
-    while (lives > 0 && lives < MAX_LIVES) {
+    while (lives > 0 && lives < MAX_LIVES && ch != 10) {
         if (timerTimeOver() == 1) {
             int newX = xSnake + incX;
             int newY = ySnake + incY;
@@ -126,7 +127,6 @@ int main() {
         // Verifique se há uma tecla pressionada
         if (keyhit()) {
             ch = readch();
-            
             switch (ch) {
                 case 'A':
                     incX = 0;
