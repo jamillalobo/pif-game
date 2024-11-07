@@ -127,9 +127,6 @@ int main() {
         if (keyhit()) {
             ch = readch();
             
-            // Debug: Imprime o código da tecla pressionada
-            printf("Tecla pressionada: %d\n", ch);
-
             switch (ch) {
                 case 'A':
                     incX = 0;
