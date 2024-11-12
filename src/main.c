@@ -16,15 +16,19 @@
 
 #define MAX_LIVES 10
 #define MIN_LIVES 0
+#define MAX_OBJECTS 100  // Defina um limite máximo para holes e fruits
 
-struct {
+typedef struct {
     int x, y;
-} typedef Position;
+} Position;
 
-int xSnake = MAXX/2, ySnake = MAXY/2; 
+Position all_objects[MAX_OBJECTS]; 
+
+int xSnake = MAXX / 2, ySnake = MAXY / 2; 
 int incX = 1, incY = 0;
 
 int collision_count = 0;
+int object_count = 0;
 
 // Declaração antecipada da função spawn_object para evitar erro de implicit declaration
 void spawn_object(Position *pos, int max_x, int max_y);
@@ -44,13 +48,32 @@ void init_game(Position *fruit, Position *hole, int *lives) {
     spawn_object(hole, max_x, max_y);
 }
 
+void add_object(Position *pos) {
+    if (object_count < MAX_OBJECTS) {
+        all_objects[object_count++] = *pos;
+    }
+}
+
 void spawn_object(Position *pos, int max_x, int max_y) {
-    pos->x = rand() % (MAXX - 5) + 1;
-    pos->y = rand() % (MAXY - 5) + 1;
+    pos->x = rand() % (max_x - 5) + 1;
+    pos->y = rand() % (max_y - 5) + 1;
+    add_object(pos);
 
     screenSetColor(RED, DARKGRAY);
     screenGotoxy(pos->x, pos->y);
     printf("o");
+}
+
+void delete_object(Position *pos) {
+    screenGotoxy(pos->x, pos->y);
+    printf(" ");
+}
+
+void clear_all_objects() {
+    for (int i = 0; i < object_count; i++) {
+        delete_object(&all_objects[i]);
+    }
+    object_count = 0;  // Reseta o contador após limpar os objetos
 }
 
 void drawSnake(int nextX, int nextY) {
@@ -66,18 +89,44 @@ void drawSnake(int nextX, int nextY) {
     printf("@");
 }
 
+void initialize_random() {
+    srand(time(NULL));
+}
+
+// Função para selecionar uma cor aleatória
+int getRandomColor() {
+    return (rand() % 8);  // Assume 8 cores básicas (ajuste conforme necessário)
+}
+
+// Define a cor do fundo do terminal
+void setTerminalBackground(int color) {
+    printf("\033[48;5;%dm", color);  // Define a cor de fundo usando ANSI
+    printf("\033[2J");               // Limpa a tela para aplicar a nova cor de fundo
+    printf("\033[H");                // Move o cursor para o canto superior esquerdo
+}
+
 void check_collisions(Position *fruit, Position *hole, int *lives) {
     if (xSnake == fruit->x && ySnake == fruit->y) {
         (*lives)++;
-        collision_count++; // Incrementa a contagem de colisões com a fruta
+        collision_count++;
         if (*lives > MAX_LIVES) *lives = MAX_LIVES;
+
+        clear_all_objects();  // Apaga todos os objetos anteriores
         spawn_object(fruit, MAXX, MAXY);
+        spawn_object(hole, MAXX, MAXY);
+
     } else if (xSnake == hole->x && ySnake == hole->y) {
         (*lives)--;
-        collision_count++; // Incrementa a contagem de colisões com o buraco
+        collision_count++;
         if (*lives < MIN_LIVES) *lives = MIN_LIVES;
-        attron(COLOR_PAIR(rand() % 7 + 1));  // Muda a cor para indicar o efeito do buraco
+
+        int randomBgColor = getRandomColor() + 40;  // Cor de fundo aleatória
+        setTerminalBackground(randomBgColor);
+
+
+        clear_all_objects();  // Apaga todos os objetos anteriores
         spawn_object(hole, MAXX, MAXY);
+        spawn_object(fruit, MAXX, MAXY);
     }
 }
 
@@ -160,7 +209,6 @@ int main() {
         spawn_counter = 0;
     }
     
-
     end_game();
     printf("Total de colisões: %d\n", collision_count);
 
