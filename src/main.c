@@ -55,8 +55,8 @@ void add_object(Position *pos) {
 }
 
 void spawn_object(Position *pos, int max_x, int max_y) {
-    pos->x = rand() % (max_x - 5) + 1;
-    pos->y = rand() % (max_y - 5) + 1;
+    pos->x = rand() % (max_x - 5) + 2;
+    pos->y = rand() % (max_y - 5) + 2;
     add_object(pos);
 
     screenSetColor(RED, DARKGRAY);
@@ -98,12 +98,17 @@ int getRandomColor() {
     return (rand() % 8);  // Assume 8 cores básicas (ajuste conforme necessário)
 }
 
-// Define a cor do fundo do terminal
-void setTerminalBackground(int color) {
-    printf("\033[48;5;%dm", color);  // Define a cor de fundo usando ANSI
-    printf("\033[2J");               // Limpa a tela para aplicar a nova cor de fundo
-    printf("\033[H");                // Move o cursor para o canto superior esquerdo
+// Função para definir a cor de fundo apenas dentro da ár   ea do jogo
+void setGameAreaBackground(int color) {
+    for (int y = MINY + 2; y <= MAXY; y++) {  // Limite da área entre as bordas
+        for (int x = MINX + 2; x < MAXX; x++) {
+            printf("\033[%d;%dH", y, x);  // Move para a posição (x, y)
+            printf("\033[48;5;%dm ", color);  // Define a cor de fundo para a célula
+        }
+    }
+    printf("\033[H");  // Retorna o cursor ao topo da tela
 }
+
 
 void check_collisions(Position *fruit, Position *hole, int *lives) {
     if (xSnake == fruit->x && ySnake == fruit->y) {
@@ -120,9 +125,11 @@ void check_collisions(Position *fruit, Position *hole, int *lives) {
         collision_count++;
         if (*lives < MIN_LIVES) *lives = MIN_LIVES;
 
-        int randomBgColor = getRandomColor() + 40;  // Cor de fundo aleatória
-        setTerminalBackground(randomBgColor);
-
+        // Gera uma cor aleatória para o fundo
+        int randomBgColor = getRandomColor() + 40;  // Cor de fundo aleatória (ajustada para o código ANSI)
+        
+        // Define a cor do fundo da área do jogo (delimitada pelas bordas)
+        setGameAreaBackground(randomBgColor);
 
         clear_all_objects();  // Apaga todos os objetos anteriores
         spawn_object(hole, MAXX, MAXY);
