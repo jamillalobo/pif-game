@@ -1,8 +1,8 @@
-# SnakeDune
+# WormDune
 
 ## Descrição
 
-O classico jogo da corbinha agora tem uma versao aprimorada, que mistura roleta russa e varios mundos! A cobrinha tem o obejtivo de comer frutinhas, que faz ela ganhar mais vidas, porem caso ela escolha a frutinha errada, ela cai num buraco que a leva pra outra dimensao (mudanca de cor do background).
+Imagine que voce e um astronauta e precisa sobreviver no espaco. Esse jogo mistura roleta russa e varios mundos! O astronauta tem o objetivo de sobreviver ganhando vidas, porem caso ele escolha o objeto errado, ele cai num portal que o leva pra outra dimensao (mudanca de cor do background).
 
 ## Integrantes
 
