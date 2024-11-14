@@ -1,10 +1,3 @@
-/**
- * main.h
- * Created on Aug, 23th 2023
- * Author: Tiago Barros
- * Based on "From C to C++ course - 2002"
- */
-
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
@@ -16,7 +9,7 @@
 
 #define MAX_LIVES 10
 #define MIN_LIVES 0
-#define MAX_OBJECTS 100  // Defina um limite máximo para holes e fruits
+#define MAX_OBJECTS 100
 
 typedef struct {
     int x, y;
@@ -30,7 +23,6 @@ int incX = 1, incY = 0;
 int collision_count = 0;
 int object_count = 0;
 
-// Declaração antecipada da função spawn_object para evitar erro de implicit declaration
 void spawn_object(Position *pos, int max_x, int max_y);
 
 void init_game(Position *fruit, Position *hole, int *lives) {
@@ -73,7 +65,7 @@ void clear_all_objects() {
     for (int i = 0; i < object_count; i++) {
         delete_object(&all_objects[i]);
     }
-    object_count = 0;  // Reseta o contador após limpar os objetos
+    object_count = 0; 
 }
 
 void drawSnake(int nextX, int nextY) {
@@ -93,20 +85,18 @@ void initialize_random() {
     srand(time(NULL));
 }
 
-// Função para selecionar uma cor aleatória
 int getRandomColor() {
-    return (rand() % 8);  // Assume 8 cores básicas (ajuste conforme necessário)
+    return (rand() % 8); 
 }
 
-// Função para definir a cor de fundo apenas dentro da ár   ea do jogo
 void setGameAreaBackground(int color) {
-    for (int y = MINY + 2; y <= MAXY; y++) {  // Limite da área entre as bordas
+    for (int y = MINY + 2; y <= MAXY; y++) {  
         for (int x = MINX + 2; x < MAXX; x++) {
-            printf("\033[%d;%dH", y, x);  // Move para a posição (x, y)
-            printf("\033[48;5;%dm ", color);  // Define a cor de fundo para a célula
+            printf("\033[%d;%dH", y, x);  
+            printf("\033[48;5;%dm ", color);  
         }
     }
-    printf("\033[H");  // Retorna o cursor ao topo da tela
+    printf("\033[H");  
 }
 
 
@@ -116,7 +106,7 @@ void check_collisions(Position *fruit, Position *hole, int *lives) {
         collision_count++;
         if (*lives > MAX_LIVES) *lives = MAX_LIVES;
 
-        clear_all_objects();  // Apaga todos os objetos anteriores
+        clear_all_objects();  
         spawn_object(fruit, MAXX, MAXY);
         spawn_object(hole, MAXX, MAXY);
 
@@ -125,21 +115,18 @@ void check_collisions(Position *fruit, Position *hole, int *lives) {
         collision_count++;
         if (*lives < MIN_LIVES) *lives = MIN_LIVES;
 
-        // Gera uma cor aleatória para o fundo
-        int randomBgColor = getRandomColor() + 40;  // Cor de fundo aleatória (ajustada para o código ANSI)
-        
-        // Define a cor do fundo da área do jogo (delimitada pelas bordas)
+        int randomBgColor = getRandomColor() + 40;
         setGameAreaBackground(randomBgColor);
 
-        clear_all_objects();  // Apaga todos os objetos anteriores
+        clear_all_objects(); 
         spawn_object(hole, MAXX, MAXY);
         spawn_object(fruit, MAXX, MAXY);
     }
 }
 
 void draw_lives(int lives) {
-    screenSetColor(WHITE, BLACK);
-    screenGotoxy(0, 0);
+    screenSetColor(WHITE, DARKGRAY);
+    screenGotoxy(1, MAXY);
     printf("Vidas: %d", lives);
 }
 
@@ -166,7 +153,6 @@ int main() {
             int newX = xSnake + incX;
             int newY = ySnake + incY;
 
-            // Verifica as bordas para a colisão e rebote
             if (newX >= (MAXX - 2) || newX <= MINX + 1) {
                 incX = -incX;
             }
@@ -174,7 +160,6 @@ int main() {
                 incY = -incY;
             }
 
-            // Atualiza a posição da cobra
             drawSnake(newX, newY);
         }
 
