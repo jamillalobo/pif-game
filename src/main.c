@@ -1,10 +1,3 @@
-/**
- * main.h
- * Created on Aug, 23th 2023
- * Author: Tiago Barros
- * Based on "From C to C++ course - 2002"
- */
-
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
@@ -142,8 +135,8 @@ void check_collisions(Position *food, Position *hole, int *lives) {
 }
 
 void draw_lives(int lives) {
-    screenSetColor(WHITE, BLACK);
-    screenGotoxy(0, 0);
+    screenSetColor(WHITE, DARKGRAY);
+    screenGotoxy(1, MAXY);
     printf("Vidas: %d", lives);
 }
 
